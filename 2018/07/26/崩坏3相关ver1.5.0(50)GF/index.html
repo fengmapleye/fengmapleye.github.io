@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.loli.net/css?family=Lato:300,300italic,400,400italic,700,700italic|Damion:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="CNGames,崩坏3," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="尝试对游戏本地的AssetBundle文件进行修改，以达到测试的目的">
+<meta name="keywords" content="CNGames,崩坏3">
+<meta property="og:type" content="article">
+<meta property="og:title" content="崩坏3相关（ver1.5.0(50) GF）">
+<meta property="og:url" content="https://floe-ice.cn/2018/07/26/崩坏3相关ver1.5.0(50)GF/index.html">
+<meta property="og:site_name" content="Floe-ice&#39;s Blog">
+<meta property="og:description" content="尝试对游戏本地的AssetBundle文件进行修改，以达到测试的目的">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://pc8wl92qv.bkt.clouddn.com/bh31.jpg">
+<meta property="og:image" content="http://pc8wl92qv.bkt.clouddn.com/bh32.jpg">
+<meta property="og:image" content="http://pc8wl92qv.bkt.clouddn.com/bh33.jpg">
+<meta property="og:image" content="http://pc8wl92qv.bkt.clouddn.com/bh34.jpg">
+<meta property="og:image" content="http://pc8wl92qv.bkt.clouddn.com/bh35.jpg">
+<meta property="og:image" content="http://pc8wl92qv.bkt.clouddn.com/bh36.jpg">
+<meta property="og:image" content="http://pc8wl92qv.bkt.clouddn.com/bh37.jpg">
+<meta property="og:updated_time" content="2018-07-26T14:34:24.175Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="崩坏3相关（ver1.5.0(50) GF）">
+<meta name="twitter:description" content="尝试对游戏本地的AssetBundle文件进行修改，以达到测试的目的">
+<meta name="twitter:image" content="http://pc8wl92qv.bkt.clouddn.com/bh31.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://floe-ice.cn/2018/07/26/崩坏3相关ver1.5.0(50)GF/"/>
+
+
+
+
+
+  <title>崩坏3相关（ver1.5.0(50) GF） | Floe-ice's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Floe-ice's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Spear and Shield</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://floe-ice.cn/2018/07/26/崩坏3相关ver1.5.0(50)GF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Floeice">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/floe.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Floe-ice's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">崩坏3相关（ver1.5.0(50) GF）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-26T22:20:29+08:00">
+                2018-07-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/07/26/崩坏3相关ver1.5.0(50)GF/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2018/07/26/崩坏3相关ver1.5.0(50)GF/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/07/26/崩坏3相关ver1.5.0(50)GF/" class="leancloud_visitors" data-flag-title="崩坏3相关（ver1.5.0(50) GF）">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>尝试对游戏本地的AssetBundle文件进行修改，以达到测试的目的</p>
+<a id="more"></a>
+<h2 id="0x01-上古源码分析"><a href="#0x01-上古源码分析" class="headerlink" title="0x01 上古源码分析"></a>0x01 上古源码分析</h2><p>拿出珍藏的ver1.0.2 Dll源码，定位到MoleMole.AssetBundleInfo.PreLoad()，关键代码如下：</p>
+<p><img src="http://pc8wl92qv.bkt.clouddn.com/bh31.jpg" alt="bh31"></p>
+<p>其中，CalculateFileCrc采用CalculateFileHash –&gt; HMACSHA1来进行文件校验，无解*<br>MyAESDecrypted是主要的解密方法，得到解密后的AssetBundle</p>
+<p><img src="http://pc8wl92qv.bkt.clouddn.com/bh32.jpg" alt="bh32"></p>
+<p>可以看出 解密过程中</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ENCRYPTED_KEY + RSA_SALT --&gt; RSADecrypted --&gt; buffer2 + buffer3</span><br><span class="line">ENCFile + buffer2 + buffer3 --&gt; AESDecrypted --&gt; DECFile</span><br></pre></td></tr></table></figure>
+<p>ENCRYPTED_KEY来自于</p>
+<p><img src="http://pc8wl92qv.bkt.clouddn.com/bh33.jpg" alt="bh33"></p>
+<p>ver1.5.0版本下，通过读取游戏loading时下载的DataVersion.unity3d文件的第一行内容来获取 byte(ENCRYPTED_KEY)，<a href="https://bundle.bh3.com/asset_bundle/android01/1.0/data/android_compressed/DataVersion.unity3d" target="_blank" rel="noopener">文件传送门</a><br>需要注意的是，文件读取之前应全文异或0xA5</p>
+<p><img src="http://pc8wl92qv.bkt.clouddn.com/bh34.jpg" alt="bh34"></p>
+<p>同时可得到RSA_SALT:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RSA_SALT = <span class="string">"&lt;RSAKeyValue&gt;&lt;Modulus&gt;rXoKWm82JSX4UYihkt2FSjrp3pZqTxt6AyJ0ZexHssStYesCFuUOmDBrk0nxPTY2r7oB4ZC9tDhHzmA66Me56wkD47Z3fCEBfLFxmEVdUCvM1RIFdQxQCB7CMaFWXHoVfBhNcD60OtXD71vFusBLioa6HDHbKk8LdgWdV10OWaE=&lt;/Modulus&gt;&lt;Exponent&gt;EQ==&lt;/Exponent&gt;&lt;P&gt;16GiwrgCGvcYbgSZOBJRx4G9kioGgexLSyW62iK4EuT0Xu9xyflBDaC4yooFkxrflqEAIiEfTqNGlYeJks+5qw==&lt;/P&gt;&lt;Q&gt;zfQY4dWi/Dlo38y6xvX4pUEAj1hbeFo/Qiy7H00P089W0KC6Mdi+GY4UuRGJtgX7UZfGQdHRj8mBjijFyhUl4w==&lt;/Q&gt;&lt;DP&gt;cihlOejyDkaUdnrntEXvD0Svp7vlU9dzJ8iuNz+OoJdUMkKHiQt8yvq8Lv3Gt0p2Xs20xsY9wDhSi2Xfa9diSw==&lt;/DP&gt;&lt;DQ&gt;GDrVwDdAWeii7SclCFksT61LXCiDO1XpUxRSP+ryzZ/sGIthMwpwt7ZcynqIrAC0J7eAvHMJmHIPPeat24oEdQ==&lt;/DQ&gt;&lt;InverseQ&gt;P4/vgq1XF77N8K/OxTbcjWFCC1d+v3W5xWQJbmU3KfVF2wOStZeILT2X12s7AHD+uUfN9O/xdEBIeqcSLVxWjw==&lt;/InverseQ&gt;&lt;D&gt;o0WvZCxvMgWeatrybBvIvlWQ0X6CLFYYe2u42GXpILkbp3PFuzHvnkuwip/yG35RllS2efGjfHE0hgA3cazrNgM6gBDcFa7iznviIiQTySxFuzy3mXpjSQFaGgdvmuUQLgg5qahcdGgT455Fzo5GSu+IyTpD+dNoKy79NLTbvjE=&lt;/D&gt;&lt;/RSAKeyValue&gt;"</span>;</span><br></pre></td></tr></table></figure>
+<p>若要实现修改Asset后，能被游戏正常读取，需完成两点：<br>1.解密时保存buffer2和buffer3用于后续文件加密<br>2.ver1.5.0版本下需通过patch so来跳过CalculateFileCrc<br>文件解加密代码略，下文将继续描述patch so来跳过校验的流程</p>
+<h2 id="0x02-Patch-so"><a href="#0x02-Patch-so" class="headerlink" title="0x02 Patch so"></a>0x02 Patch so</h2><p>定位到图示位置</p>
+<p><img src="http://pc8wl92qv.bkt.clouddn.com/bh35.jpg" alt="bh35"></p>
+<p>可见红框下方有一个BNE跳转，即 不相等则跳转<br>此处如果不跳转则throw Exception，游戏将会报错，所以应将红框处代码修改为</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MOV R0，<span class="comment">#0</span></span><br></pre></td></tr></table></figure>
+<p>即可完成跳转，绕过校验</p>
+<h2 id="0x03-测试结果"><a href="#0x03-测试结果" class="headerlink" title="0x03 测试结果"></a>0x03 测试结果</h2><p><img src="http://pc8wl92qv.bkt.clouddn.com/bh36.jpg" alt="bh36"></p>
+<p><img src="http://pc8wl92qv.bkt.clouddn.com/bh37.jpg" alt="bh37"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Floeice
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://floe-ice.cn/2018/07/26/崩坏3相关ver1.5.0(50)GF/" title="崩坏3相关（ver1.5.0(50) GF）">https://floe-ice.cn/2018/07/26/崩坏3相关ver1.5.0(50)GF/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CNGames/" rel="tag"># CNGames</a>
+          
+            <a href="/tags/崩坏3/" rel="tag"># 崩坏3</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/26/简析崩坏3的登录验证ver1.1.0/" rel="next" title="简析崩坏3的登录验证（ver1.1.0）">
+                <i class="fa fa-chevron-left"></i> 简析崩坏3的登录验证（ver1.1.0）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/floe.jpg"
+                alt="Floeice" />
+            
+              <p class="site-author-name" itemprop="name">Floeice</p>
+              <p class="site-description motion-element" itemprop="description">I'm invisible.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.perfare.net/" title="Perfare" target="_blank">Perfare</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-上古源码分析"><span class="nav-number">1.</span> <span class="nav-text">0x01 上古源码分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-Patch-so"><span class="nav-number">2.</span> <span class="nav-text">0x02 Patch so</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03-测试结果"><span class="nav-number">3.</span> <span class="nav-text">0x03 测试结果</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Floeice</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=65947922";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/fastclick/1.0.6/fastclick.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/jquery.lazyload/1.9.3/jquery.lazyload.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.ui.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname, 
+            owner: 'fengmapleye',
+            repo: 'fengmapleye.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: 'f96436404a6c5c0ca94c7a2481e2be5a75ab13e9',
+            
+                client_id: '7a3bc33f0723ecc9a7c1'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("VoiafUMXXfi3wsxbIFL4MsVI-gzGzoHsz", "wKjqpdDjxYmSV4QcheQWrCMX");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

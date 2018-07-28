@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.loli.net/css?family=Lato:300,300italic,400,400italic,700,700italic|Damion:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="CNGames,崩坏3," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="在ver1.1.0版本中，如果修改了apk中的任意文件，都会导致游戏登录时提示“不是官方的apk”，并要求重新下载游戏。下文中将对验证机制做简略分析，并提出两种绕过登录验证的方式。">
+<meta name="keywords" content="CNGames,崩坏3">
+<meta property="og:type" content="article">
+<meta property="og:title" content="简析崩坏3的登录验证（ver1.1.0）">
+<meta property="og:url" content="https://floe-ice.cn/2018/07/26/简析崩坏3的登录验证ver1.1.0/index.html">
+<meta property="og:site_name" content="Floe-ice&#39;s Blog">
+<meta property="og:description" content="在ver1.1.0版本中，如果修改了apk中的任意文件，都会导致游戏登录时提示“不是官方的apk”，并要求重新下载游戏。下文中将对验证机制做简略分析，并提出两种绕过登录验证的方式。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-07-26T14:33:23.943Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="简析崩坏3的登录验证（ver1.1.0）">
+<meta name="twitter:description" content="在ver1.1.0版本中，如果修改了apk中的任意文件，都会导致游戏登录时提示“不是官方的apk”，并要求重新下载游戏。下文中将对验证机制做简略分析，并提出两种绕过登录验证的方式。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://floe-ice.cn/2018/07/26/简析崩坏3的登录验证ver1.1.0/"/>
+
+
+
+
+
+  <title>简析崩坏3的登录验证（ver1.1.0） | Floe-ice's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Floe-ice's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Spear and Shield</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://floe-ice.cn/2018/07/26/简析崩坏3的登录验证ver1.1.0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Floeice">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/floe.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Floe-ice's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">简析崩坏3的登录验证（ver1.1.0）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-26T22:08:00+08:00">
+                2018-07-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/07/26/简析崩坏3的登录验证ver1.1.0/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2018/07/26/简析崩坏3的登录验证ver1.1.0/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/07/26/简析崩坏3的登录验证ver1.1.0/" class="leancloud_visitors" data-flag-title="简析崩坏3的登录验证（ver1.1.0）">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在ver1.1.0版本中，如果修改了apk中的任意文件，都会导致游戏登录时提示“不是官方的apk”，并要求重新下载游戏。下文中将对验证机制做简略分析，并提出两种绕过登录验证的方式。</p>
+<a id="more"></a>
+<h2 id="0x01-登录协议分析"><a href="#0x01-登录协议分析" class="headerlink" title="0x01 登录协议分析"></a>0x01 登录协议分析</h2><p>已知本游戏协议为<code>google protobuf</code>。分别用官方apk和修改过文件并重签名后的apk进行尝试登录，用<code>wireshark</code>抓取<code>GetPlayerTokenReq</code>后反序列化并进行对比，可知<code>正常Req</code>内容如下：</p>
+<figure class="highlight plain"><figcaption><span>Deserialize for GetPlayerTokenReq</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">account_ext:</span><br><span class="line">account_token:****************************</span><br><span class="line">account_type:1</span><br><span class="line">account_uid:3058104</span><br><span class="line">device:HUAWEI CHM-TL00H</span><br><span class="line">system_info:Android OS 4.4.4 / API-19 (tt/eng.jenkins.20161112.173107)</span><br><span class="line">tag:0</span><br><span class="line">token:</span><br><span class="line">version:1.1.0_gf_android</span><br><span class="line">uid:0</span><br><span class="line">device_uuid:de63a05e59d43975e5921a767f3770a4</span><br><span class="line">cps:guofu</span><br><span class="line">check_sum:a82e9b2df48e7241c2f44a0326d0ab81_f7810749_4fee4fe9e60c3370</span><br><span class="line">android_signatures:c8743787</span><br></pre></td></tr></table></figure>
+<h2 id="0x02-Dll代码分析"><a href="#0x02-Dll代码分析" class="headerlink" title="0x02 Dll代码分析"></a>0x02 Dll代码分析</h2><p>搜索关键字<code>cps</code>，可定位到<code>MoleMole.OpeUtil+ApkCommentInfo</code></p>
+<p>其中<code>GetApkComment()</code>代码如下</p>
+<figure class="highlight csharp"><figcaption><span>GetApkComment()</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ApkCommentInfo <span class="title">GetApkComment</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ApkCommentInfo info = <span class="keyword">new</span> ApkCommentInfo();</span><br><span class="line">    <span class="keyword">string</span> str = <span class="keyword">new</span> AndroidJavaClass(<span class="string">"com.unity3d.player.UnityPlayer"</span>).GetStatic(<span class="string">"currentActivity"</span>).Call(<span class="string">"getPackageResourcePath"</span>, <span class="keyword">new</span> <span class="keyword">object</span>[<span class="number">0</span>]);</span><br><span class="line">    <span class="keyword">object</span>[] args = <span class="keyword">new</span> <span class="keyword">object</span>[] &#123; str, <span class="string">"BINLAO"</span> &#125;;</span><br><span class="line">    AndroidJavaObject obj3 = <span class="keyword">new</span> AndroidJavaObject(<span class="string">"com.miHoYo.ApkCommentReader"</span>, args);</span><br><span class="line">    <span class="keyword">if</span> (obj3 != <span class="literal">null</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">byte</span>[] bytes = obj3.Call&amp;lt;<span class="keyword">byte</span>[]&amp;gt;(<span class="string">"getApkComment"</span>, <span class="keyword">new</span> <span class="keyword">object</span>[<span class="number">0</span>]);</span><br><span class="line">        info.isMihoyoComment = obj3.Call(<span class="string">"isMihoyoComment"</span>, <span class="keyword">new</span> <span class="keyword">object</span>[<span class="number">0</span>]);</span><br><span class="line">        <span class="keyword">if</span> ((bytes == <span class="literal">null</span>) || (bytes.Length &amp;lt;= <span class="number">0</span>))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> info;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (info.isMihoyoComment)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &amp;lt; bytes.Length; i++)</span><br><span class="line">            &#123;</span><br><span class="line">                bytes[i] = (<span class="keyword">byte</span>) (<span class="number">0xcc</span> ^ bytes[i]);</span><br><span class="line">            &#125;</span><br><span class="line">            info.cps = Encoding.Default.GetString(bytes);</span><br><span class="line">            <span class="keyword">return</span> info;</span><br><span class="line">        &#125;</span><br><span class="line">        info.checksum = SecurityUtil.Md5(bytes);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> info;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>getPackageResourcePath</code>即获取安装包路径，为<code>data/app/com.miHoYo.enterprise.NGHSoD-1.apk</code>，再调用java代码<code>com.miHoYo.ApkCommentReader</code>来实现<code>“getApkComment”</code>和判断<code>“isMihoyoComment”</code>，若true则返回<code>cps</code>（渠道标识）与<code>check_sum</code>。</p>
+<p>查看<code>cps</code>引用，定位到<code>MoleMole.NetworkManager.RequestPlayerLogin()</code>，代码如下</p>
+<figure class="highlight csharp"><figcaption><span>RequestPlayerLogin()</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">RequestPlayerLogin</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (GlobalVars.DISABLE_NETWORK_DEBUG)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">this</span>.SendFakePacket();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">this</span>.loginRandomNum = Singleton.Instance.LocalData.LoginRandomNum;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.loginRandomNum == <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">this</span>.loginRandomNum = <span class="keyword">this</span>.GeneralLoginRandomNum();</span><br><span class="line">            Singleton.Instance.LocalData.LoginRandomNum = <span class="keyword">this</span>.loginRandomNum;</span><br><span class="line">            Singleton.Instance.Save();</span><br><span class="line">        &#125;</span><br><span class="line">        PlayerLoginReq data = <span class="keyword">new</span> PlayerLoginReq &#123;</span><br><span class="line">            login_random_num = <span class="keyword">this</span>.loginRandomNum,</span><br><span class="line">            last_server_packet_id = <span class="keyword">this</span>._clientPacketConsumer.lastServerPacketId</span><br><span class="line">        &#125;;</span><br><span class="line">        <span class="keyword">if</span> (Singleton.Instance.apkCommentInfo != <span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">string</span> cps = Singleton.Instance.apkCommentInfo.cps;</span><br><span class="line">            <span class="keyword">if</span> (!<span class="keyword">string</span>.IsNullOrEmpty(cps))</span><br><span class="line">            &#123;</span><br><span class="line">                data.cps = cps;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">string</span> checksum = Singleton.Instance.apkCommentInfo.checksum;</span><br><span class="line">            <span class="keyword">if</span> (!<span class="keyword">string</span>.IsNullOrEmpty(checksum))</span><br><span class="line">            &#123;</span><br><span class="line">                data.check_sum = checksum;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">string</span>.IsNullOrEmpty(<span class="keyword">this</span>._uuid))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">this</span>._uuid = GetPersistentUUID();</span><br><span class="line">        &#125;</span><br><span class="line">        data.device_uuid = <span class="keyword">this</span>._uuid;</span><br><span class="line">        data.android_signatures = Singleton.Instance.apkSignature;</span><br><span class="line">        <span class="keyword">this</span>.SendPacket(data);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>cps</code>，<code>check_sum</code>与<code>android_signatures</code>最终被打包发送，其中<code>cps</code>正确值为<code>guofu</code>，可以写一个小程序算出对应<code>checksum</code>，代码如下</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.IO;</span><br><span class="line"><span class="keyword">using</span> System.Text;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ope</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span></span><br><span class="line"><span class="function">		</span>&#123;</span><br><span class="line">			<span class="keyword">byte</span>[] bs = System.Text.Encoding.Default.GetBytes(<span class="string">"guofu"</span>);</span><br><span class="line">			File.WriteAllBytes(<span class="string">@"e:\test.dat"</span>,bs);</span><br><span class="line">			<span class="keyword">byte</span>[] ts = File.ReadAllBytes(<span class="string">@"e:\test.dat"</span>);</span><br><span class="line">			<span class="keyword">string</span> cps = System.Text.Encoding.Default.GetString(ts);</span><br><span class="line">			Console.WriteLine(cps);</span><br><span class="line">			Console.WriteLine(Md5(ts));</span><br><span class="line">			Console.ReadLine();</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">string</span> <span class="title">Md5</span>(<span class="params"><span class="keyword">byte</span>[] bytes</span>)</span></span><br><span class="line"><span class="function">		</span>&#123;</span><br><span class="line">   			 <span class="keyword">byte</span>[] buffer = <span class="keyword">new</span> System.Security.Cryptography.MD5CryptoServiceProvider().ComputeHash(bytes);</span><br><span class="line">   			 <span class="keyword">string</span> str = <span class="keyword">string</span>.Empty;</span><br><span class="line">    		 <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &amp;lt; buffer.Length; i++)</span><br><span class="line">   			 &#123;</span><br><span class="line">      			  str = str + Convert.ToString(buffer[i], <span class="number">0x10</span>).PadLeft(<span class="number">2</span>, <span class="string">'0'</span>);</span><br><span class="line">   			 &#125;</span><br><span class="line">   			 <span class="keyword">return</span> str.PadLeft(<span class="number">0x20</span>, <span class="string">'0'</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="0x03-JAVA层代码分析"><a href="#0x03-JAVA层代码分析" class="headerlink" title="0x03 JAVA层代码分析"></a>0x03 JAVA层代码分析</h2><p>由dll代码分析可知<code>check_sum</code>应为<code>apkCommentInfo.checksum</code>+<code>“f7810749_4fee4fe9e60c3370”</code>，<code>check_sum</code>中的未知值与<code>android_signature</code>的获取应在java层代码中有相关实现。利用androidkiller对apk进行反编译，得到classes-dex2jar.jar，用jd-gui打开后定位到<code>com.miHoYo.ApkCommentReader</code>与<code>com.miHoYo.MihoyoAndroidUtil</code>。<code>com.miHoYo.ApkCommentReader</code>中的<code>getApkComment()</code>用于获取并返回apk zip包的注释信息（cps xor 0xcc）。<code>isMihoyoComment()</code>用于判断apk内容是否被篡改，若被篡改，返回false，反之为true。</p>
+<figure class="highlight csharp"><figcaption><span>getApkComment()</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">byte</span>[] <span class="title">getApkComment</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="keyword">this</span>._commentInit)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">this</span>._comment = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">0</span>];</span><br><span class="line">      <span class="keyword">this</span>._isMihoyoComment = <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">try</span></span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">this</span>._commentInit = <span class="literal">true</span>;</span><br><span class="line">      <span class="keyword">byte</span>[] arrayOfByte = fastReadComment(<span class="keyword">new</span> File(<span class="keyword">this</span>.path), <span class="keyword">this</span>.magicCode);</span><br><span class="line">      <span class="keyword">if</span> (arrayOfByte != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">this</span>._comment = arrayOfByte;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">catch</span> (Exception localException)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">for</span> (;;)</span><br><span class="line">      &#123;</span><br><span class="line">        localException.printStackTrace();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>._comment;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">public</span> boolean <span class="title">isMihoyoComment</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (<span class="keyword">this</span>._commentInit) &amp;&amp; (<span class="keyword">this</span>._isMihoyoComment);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>com.miHoYo.MihoyoAndroidUtil</code>中的<code>getMetaInfCheckSum()</code>用于获取证书<code>MANIFEST.MF</code>的crc32+all MD5，<code>getSign()</code>用于获取当前apksignature的hashcode，通过编写Xposed插件hook上述两个函数并打印出log，得到</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">getMetaInfCheckSum = f7810749_4fee4fe9e60c3370</span><br><span class="line">android_signature = getSign = c8743787</span><br></pre></td></tr></table></figure>
+<h2 id="0x04-破解方法"><a href="#0x04-破解方法" class="headerlink" title="0x04 破解方法"></a>0x04 破解方法</h2><p>1.编写Xposed插件进行关键函数Hook，代码如下</p>
+<figure class="highlight java"><figcaption><span>xposed code</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> android.app.Activity;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> de.robv.android.xposed.XposedHelpers.findAndHookMethod;</span><br><span class="line"><span class="keyword">import</span> de.robv.android.xposed.IXposedHookLoadPackage;</span><br><span class="line"><span class="keyword">import</span> de.robv.android.xposed.XC_MethodHook;</span><br><span class="line"><span class="keyword">import</span> de.robv.android.xposed.XposedBridge;</span><br><span class="line"><span class="keyword">import</span> de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> <span class="keyword">implements</span> <span class="title">IXposedHookLoadPackage</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleLoadPackage</span><span class="params">(LoadPackageParam lpparam)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (!lpparam.packageName.equals(<span class="string">"com.miHoYo.enterprise.NGHSoD"</span>))</span><br><span class="line">			<span class="keyword">return</span>;</span><br><span class="line">		</span><br><span class="line">		XposedBridge.log(<span class="string">"Loaded app:"</span> + lpparam.packageName);</span><br><span class="line">		</span><br><span class="line">		findAndHookMethod(<span class="string">"com.miHoYo.MihoyoAndroidUtil"</span>, </span><br><span class="line">				lpparam.classLoader, <span class="string">"getSign"</span>,Activity.class,<span class="keyword">new</span> XC_MethodHook() &#123;</span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">afterHookedMethod</span><span class="params">(MethodHookParam param)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">				<span class="comment">//Log.i("getSign","Sign str:"+param.getResult());</span></span><br><span class="line">				param.setResult(<span class="string">"c8743787"</span>);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;);</span><br><span class="line">		</span><br><span class="line">		findAndHookMethod(<span class="string">"com.miHoYo.MihoyoAndroidUtil"</span>, </span><br><span class="line">				lpparam.classLoader, <span class="string">"getMetaInfCheckSum"</span>,String.class,<span class="keyword">new</span> XC_MethodHook() &#123;</span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">afterHookedMethod</span><span class="params">(MethodHookParam param)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">				<span class="comment">//Log.i("CheckSum","checksum str:"+param.getResult());</span></span><br><span class="line">				param.setResult(<span class="string">"f7810749_4fee4fe9e60c3370"</span>);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;);</span><br><span class="line">		</span><br><span class="line">		findAndHookMethod(<span class="string">"com.miHoYo.ApkCommentReader"</span>, </span><br><span class="line">				lpparam.classLoader, <span class="string">"isMihoyoComment"</span>,<span class="keyword">new</span> XC_MethodHook() &#123;</span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">afterHookedMethod</span><span class="params">(MethodHookParam param)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">				param.setResult(<span class="keyword">true</span>);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;);		</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>2.修改smali并编译，使关键函数返回固定值，并令<code>isMihoyoComment()</code>始终返回true，进行文件修改之后重打包签名并提取META-INF签名文件夹，classes.dex与resources.arsc，覆盖到官方apk中，以保留原有zip注释。</p>
+<h2 id="0x05-总结"><a href="#0x05-总结" class="headerlink" title="0x05 总结"></a>0x05 总结</h2><p>1.服务器未检测cps。</p>
+<p>2.应对java层代码进行混淆，并将关键代码隐藏到native层中。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Floeice
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://floe-ice.cn/2018/07/26/简析崩坏3的登录验证ver1.1.0/" title="简析崩坏3的登录验证（ver1.1.0）">https://floe-ice.cn/2018/07/26/简析崩坏3的登录验证ver1.1.0/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CNGames/" rel="tag"># CNGames</a>
+          
+            <a href="/tags/崩坏3/" rel="tag"># 崩坏3</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/22/BanGDream相关ver1.1.1/" rel="next" title="BanG Dream相关（Updated ver1.1.1）">
+                <i class="fa fa-chevron-left"></i> BanG Dream相关（Updated ver1.1.1）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/26/崩坏3相关ver1.5.0(50)GF/" rel="prev" title="崩坏3相关（ver1.5.0(50) GF）">
+                崩坏3相关（ver1.5.0(50) GF） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/floe.jpg"
+                alt="Floeice" />
+            
+              <p class="site-author-name" itemprop="name">Floeice</p>
+              <p class="site-description motion-element" itemprop="description">I'm invisible.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.perfare.net/" title="Perfare" target="_blank">Perfare</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-登录协议分析"><span class="nav-number">1.</span> <span class="nav-text">0x01 登录协议分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-Dll代码分析"><span class="nav-number">2.</span> <span class="nav-text">0x02 Dll代码分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03-JAVA层代码分析"><span class="nav-number">3.</span> <span class="nav-text">0x03 JAVA层代码分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x04-破解方法"><span class="nav-number">4.</span> <span class="nav-text">0x04 破解方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x05-总结"><span class="nav-number">5.</span> <span class="nav-text">0x05 总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Floeice</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=65947922";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/fastclick/1.0.6/fastclick.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/jquery.lazyload/1.9.3/jquery.lazyload.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.ui.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname, 
+            owner: 'fengmapleye',
+            repo: 'fengmapleye.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: 'f96436404a6c5c0ca94c7a2481e2be5a75ab13e9',
+            
+                client_id: '7a3bc33f0723ecc9a7c1'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("VoiafUMXXfi3wsxbIFL4MsVI-gzGzoHsz", "wKjqpdDjxYmSV4QcheQWrCMX");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
